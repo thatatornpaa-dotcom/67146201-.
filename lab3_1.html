@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>lab3_1.html</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ตั้งค่าระบบสีแนวสถาบันการเงินยุคใหม่ (FinTech Emerald) */
+        :root {
+            --bg-page: #f8fafc;        /* เทาอมฟ้าสว่าง สบายตา */
+            --primary: #059669;       /* เขียวเอมเมอรัลด์เข้ม */
+            --primary-hover: #047857; /* เขียวเข้มขึ้นเมื่อ Hover */
+            --text-main: #0f172a;     /* ดำนุ่มนวล Slate 900 */
+            --text-muted: #475569;    /* เทา Slate 600 */
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* กล่องเนื้อหาหลัก */
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        /* การ์ดส่วนอินพุตกรอกข้อมูล */
+        .loan-card {
+            background-color: var(--card-bg);
+            padding: 35px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-family: 'Plus Jakarta Sans', 'Sarabun', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--primary);
+        }
+
+        /* จัดฟอร์มเป็นระบบ Grid 2 คอลัมน์เพื่อความกะทัดรัด */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            color: var(--text-main);
+            background-color: #f8fafc;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--primary);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
+        }
+
+        /* ปุ่มคำนวณสีเขียวเด่นชัด */
+        .btn-calc {
+            width: 100%;
+            background-color: var(--primary);
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
+        }
+
+        .btn-calc:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        /* กล่องสรุปผลลัพธ์ค่างวด (Result Banner) */
+        .result-section {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border: 1px solid #a7f3d0;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            color: #065f46;
+        }
+
+        .result-section h4 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #a7f3d0;
+            padding-bottom: 8px;
+        }
+
+        .result-section p {
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+
+        .result-section strong {
+            font-size: 18px;
+            color: #047857;
+        }
+
+        /* ส่วนหัวของตารางรายละเอียด */
+        .table-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-main);
+            border-left: 4px solid var(--primary);
+            padding-left: 10px;
+        }
+
+        /* ปรับแต่งตารางรายงานให้หรูหราแบบโมเดิร์น */
+        .table-wrapper {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 14px 16px;
+            font-size: 13.5px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            color: var(--text-main);
+        }
+
+        /* ตารางสลับสีแถวเว้นแถว (Zebra Stripe) ทำให้อ่านง่าย */
+        tbody tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        /* ตกแต่งตำแหน่งตัวเลขตัวคูณให้สวยงามในตาราง */
+        .text-center { text-align: center; }
+        .text-right { text-align: right; font-family: 'Plus Jakarta Sans', monospace; }
+
+        /* ปรับสัดส่วนสำหรับแสดงบนหน้าจอมือถือ */
+        @media (max-width: 640px) {
+            .form-grid { grid-template-columns: 1fr; gap: 15px; }
+            body { padding: 20px 10px; }
+            .loan-card { padding: 25px 20px; }
+            th, td { padding: 10px 8px; font-size: 12.5px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <div class="loan-card">
+            <h2>🏠 โปรแกรมคำนวณสินเชื่อบ้าน</h2>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="salary">เงินเดือน (บาท):</label>
+                    <input type="number" id="salary" placeholder="เช่น 30000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="loanAmount">วงเงินที่ต้องการกู้ (บาท):</label>
+                    <input type="number" id="loanAmount" placeholder="เช่น 2000000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="interestRate">อัตราดอกเบี้ยต่อปี (%):</label>
+                    <input type="number" id="interestRate" step="0.01" value="3.5">
+                </div>
+                
+                <div class="form-group">
+                    <label for="years">ระยะเวลากู้ (ปี):</label>
+                    <input type="number" id="years" value="30">
+                </div>
+            </div>
+            
+            <button class="btn-calc" onclick="calculateLoan()">คำนวณสินเชื่อบ้าน</button>
+        </div>
+        
+        <div id="result"></div>
+        
+        <div id="tableContainer"></div>
+
+    </div>
+
+    <script>
+    function calculateLoan() {
+        let salaryInput = document.getElementById("salary").value;
+        let loanInput = document.getElementById("loanAmount").value;
+        let interestInput = document.getElementById("interestRate").value;
+        let yearsInput = document.getElementById("years").value;
+
+        if (!salaryInput || !loanInput || !interestInput || !yearsInput) {
+            alert("กรุณากรอกข้อมูลให้ครบทุกช่อง");
+            return;
+        }
+
+        let monthlySalary = parseFloat(salaryInput);
+        let loanAmount = parseFloat(loanInput);
+        let annualInterestRate = parseFloat(interestInput);
+        let years = parseInt(yearsInput);
+
+        let maxLoan = monthlySalary * 200;
+
+        if (loanAmount > maxLoan) {
+            alert(`วงเงินกู้เกินกำหนด! คุณกู้ได้สูงสุดคือ ${maxLoan.toFixed(2)} บาท (200 เท่าของเงินเดือน)`);
+            return;
+        }
+
+        let monthlyInterestRate = (annualInterestRate / 100) / 12;
+        let months = years * 12;
+
+        let monthlyPayment = 0;
+        if (monthlyInterestRate === 0) {
+            monthlyPayment = loanAmount / months;
+        } else {
+            monthlyPayment = (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, months)) / (Math.pow(1 + monthlyInterestRate, months) - 1);
+        }
+
+        // ปรับแต่งแทมเพลตป้ายสรุปผลค่างวด (Result Banner)
+        document.getElementById("result").innerHTML = `
+            <div class="result-section">
+                <h4>📊 สรุปผลการวิเคราะห์สินเชื่อบ้าน</h4>
+                <p>วงเงินกู้: ฿${loanAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} บาท (วงเงินสูงสุดที่คุณกู้ได้: ฿${maxLoan.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} บาท)</p>
+                <p>อัตราดอกเบี้ย: ${annualInterestRate.toFixed(2)}% ต่อปี</p>
+                <p>ระยะเวลาผ่อนชำระ: ${years} ปี (${months} งวดรายเดือน)</p>
+                <p style="margin-top: 10px;"><strong>💡 ค่างวดผ่อนชำระรายเดือนประมาณ: ฿${monthlyPayment.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} บาท</strong></p>
+            </div>
+        `;
+
+        let remainingPrincipal = loanAmount;
+        
+        // ปรับแต่งแทมเพลตตารางแจกแจงหนี้รายงวดให้ตอบรับสไตล์ใหม่
+        let tableHTML = `
+            <h4 class="table-title">ตารางรายละเอียดการผ่อนชำระแต่ละงวดแบบลดต้นลดดอก</h4>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="text-center">งวดที่</th>
+                            <th class="text-right">ค่างวด (บาท)</th>
+                            <th class="text-right">ดอกเบี้ยที่จ่าย (บาท)</th>
+                            <th class="text-right">เงินต้นที่ลดลง (บาท)</th>
+                            <th class="text-right">เงินต้นคงเหลือ (บาท)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+
+        for (let i = 1; i <= months; i++) {
+            let interestPayment = remainingPrincipal * monthlyInterestRate; 
+            let principalPayment = monthlyPayment - interestPayment;       
+            
+            if (i === months) {
+                principalPayment = remainingPrincipal;
+                monthlyPayment = principalPayment + interestPayment;
+                remainingPrincipal = 0;
+            } else {
+                remainingPrincipal -= principalPayment;
+            }
+
+            tableHTML += `
+                <tr>
+                    <td class="text-center" style="font-weight: 600; color: #64748b;">${i}</td>
+                    <td class="text-right" style="font-weight: 600;">${monthlyPayment.toFixed(2)}</td>
+                    <td class="text-right" style="color: #ef4444;">-${interestPayment.toFixed(2)}</td>
+                    <td class="text-right" style="color: #10b981;">${principalPayment.toFixed(2)}</td>
+                    <td class="text-right" style="font-weight: 600; color: #1e293b;">${Math.max(0, remainingPrincipal).toFixed(2)}</td>
+                </tr>
+            `;
+        }
+
+        tableHTML += `
+                    </tbody>
+                </table>
+            </div>
+        `;
+
+        document.getElementById("tableContainer").innerHTML = tableHTML;
+    }
+    </script>
+
+</body>
+</html>

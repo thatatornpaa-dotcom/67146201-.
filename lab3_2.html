@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>lab3_2.html</title>
+</head>
+<body>
+
+    <h2>คำนวณสินเชื่อรถยนต์</h2>
+    
+    <label>ราคารถ (บาท):</label>
+    <input type="number" id="carPrice"><br><br>
+    
+    <label>เงินดาวน์ (บาท):</label>
+    <input type="number" id="downPayment"><br><br>
+    
+    <label>อัตราดอกเบี้ยต่อปี (%):</label>
+    <input type="number" id="interestRate" step="0.01" placeholder="เช่น 2 - 5"><br><br>
+    
+    <label>จำนวนเดือนที่ผ่อน (เดือน):</label>
+    <input type="number" id="months" placeholder="เช่น 48, 60, 72"><br><br>
+    
+    <button onclick="calculateCarLoan()">คำนวณสินเชื่อ</button>
+    
+    <hr>
+    
+    <div id="summary"></div>
+    
+    <br>
+    <div id="paymentTable"></div>
+
+    <script>
+    function calculateCarLoan() {
+        let carPrice = parseFloat(document.getElementById("carPrice").value);
+        let downPayment = parseFloat(document.getElementById("downPayment").value);
+        
+        // ขั้นตอนที่ 2: คำนวณจำนวนเงินกู้สุทธิ (ยอดจัด)
+        let loanAmount = carPrice - downPayment;
+        
+        let interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
+        let months = parseInt(document.getElementById("months").value);
+
+        // ตรวจสอบข้อมูลเบื้องต้น
+        if (isNaN(carPrice) || isNaN(downPayment) || isNaN(interestRate) || isNaN(months)) {
+            alert("กรุณากรอกข้อมูลให้ครบถ้วนทุกช่องครับ");
+            return;
+        }
+        if (loanAmount <= 0) {
+            alert("ยอดเงินดาวน์ต้องไม่มากกว่าหรือเท่ากับราคารถยนต์");
+            return;
+        }
+
+        // ขั้นตอนที่ 4: คำนวณค่างวดรายเดือน (ใช้สูตรเดียวกับสินเชื่อบ้านตามที่โจทย์ระบุ)
+        let monthlyPayment = (loanAmount * interestRate * Math.pow(1 + interestRate, months)) / 
+                             (Math.pow(1 + interestRate, months) - 1);
+
+        if (isNaN(monthlyPayment) || !isFinite(monthlyPayment)) {
+            monthlyPayment = loanAmount / months;
+        }
+
+        // คำนวณยอดรวมเพื่อใช้ใน ขั้นตอนที่ 5
+        let totalPayment = monthlyPayment * months;
+        let totalInterest = totalPayment - loanAmount;
+
+        // ขั้นตอนที่ 5: แสดงสรุปการเงินทั้งหมด (ยอดรวม, ดอกเบี้ยรวม)
+        document.getElementById("summary").innerHTML = `
+            <h4>สรุปสินเชื่อรถยนต์</h4>
+            <p>ราคารถยนต์: ${carPrice.toFixed(2)} บาท</p>
+            <p>เงินดาวน์: ${downPayment.toFixed(2)} บาท</p>
+            <p>เงินกู้สุทธิ (ยอดจัด): ${loanAmount.toFixed(2)} บาท</p>
+            <p>ค่างวดรายเดือน: ${monthlyPayment.toFixed(2)} บาท</p>
+            <p><strong>ยอดรวมที่ต้องจ่ายทั้งหมด (ไม่รวมดาวน์): ${totalPayment.toFixed(2)} บาท</strong></p>
+            <p><strong>ดอกเบี้ยรวมทั้งหมด: ${totalInterest.toFixed(2)} บาท</strong></p>
+        `;
+
+        // ขั้นตอนที่ 6: แสดงตารางผ่อนชำระแบบย่อ (ทุก 6 เดือน)
+        let tableHtml = `
+            <h4>ตารางผ่อนชำระแบบย่อ (ทุก 6 เดือน)</h4>
+            <table border="1" cellpadding="5" cellspacing="0">
+                <thead>
+                    <tr style="background-color: #f2f2f2;">
+                        <th>งวดที่</th>
+                        <th>ค่างวด</th>
+                        <th>เงินต้น</th>
+                        <th>ดอกเบี้ย</th>
+                        <th>คงเหลือ</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+        
+        let remaining = loanAmount;
+        for (let i = 1; i <= months; i++) {
+            let interest = remaining * interestRate;
+            let principal = monthlyPayment - interest;
+            
+            if (i === months) {
+                principal = remaining;
+                monthlyPayment = principal + interest;
+                remaining = 0;
+            } else {
+                remaining -= principal;
+            }
+            
+            // เงื่อนไขแสดงผลทุกๆ 6 เดือน หรือ งวดสุดท้ายตามเกณฑ์
+            if (i % 6 === 0 || i === months) {
+                tableHtml += `<tr>
+                                <td align="center">${i}</td>
+                                <td align="right">${monthlyPayment.toFixed(2)}</td>
+                                <td align="right">${principal.toFixed(2)}</td>
+                                <td align="right">${interest.toFixed(2)}</td>
+                                <td align="right">${Math.max(0, remaining).toFixed(2)}</td>
+                              </tr>`;
+            }
+        }
+        tableHtml += "</tbody></table>";
+        document.getElementById("paymentTable").innerHTML = tableHtml;
+    }
+    </script>
+
+</body>
+</html>

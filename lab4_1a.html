@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>lab4_1a.html</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ตั้งค่าพื้นฐาน */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        body {
+            background-color: #fafafa;
+            color: #2d3748;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: background-color 0.4s ease; /* เพิ่มความสมูทเวลาเปลี่ยนธีม */
+        }
+
+        /* กล่องฟอร์มสไตล์กระจกนุ่มนวล อ่านง่ายทุกเฉดสีพื้นหลัง */
+        .form-container {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 460px;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        h2 {
+            font-family: 'Plus Jakarta Sans', 'Sarabun', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+            color: #1a202c;
+            margin-bottom: 28px;
+        }
+
+        /* จัดระเบียบช่องกรอกข้อมูล */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 15px;
+            color: #2d3748;
+            background-color: #f8fafc;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        select:focus {
+            border-color: #4299e1;
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+        }
+
+        /* โซนปุ่มควบคุม */
+        .btn-group {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 12px;
+            margin-top: 28px;
+            margin-bottom: 24px;
+        }
+
+        button {
+            border: none;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        /* ปุ่มบันทึกข้อมูลโทนสีน้ำเงินเท่ๆ */
+        .btn-save {
+            background-color: #2b6cb0;
+            color: #ffffff;
+        }
+
+        .btn-save:hover {
+            background-color: #2c5282;
+            transform: translateY(-1px);
+        }
+
+        /* ปุ่มล้างข้อมูล */
+        .btn-clear {
+            background-color: #edf2f7;
+            color: #4a5568;
+        }
+
+        .btn-clear:hover {
+            background-color: #e2e8f0;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px dashed #e2e8f0;
+            margin-bottom: 20px;
+        }
+
+        /* ส่วนลิงก์เปิดหน้าถัดไป */
+        .link-wrapper {
+            text-align: center;
+        }
+
+        .result-link {
+            display: inline-block;
+            color: #4299e1;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .result-link:hover {
+            color: #2b6cb0;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body id="pageBody">
+
+    <div class="form-container">
+        <h2>ฟอร์มเก็บข้อมูลส่วนตัว (หน้า 1a)</h2>
+        
+        <div class="form-group">
+            <label for="name">ชื่อ-นามสกุล:</label>
+            <input type="text" id="name" placeholder="กรอกชื่อและนามสกุลของคุณ">
+        </div>
+        
+        <div class="form-group">
+            <label for="email">อีเมล:</label>
+            <input type="email" id="email" placeholder="example@email.com">
+        </div>
+        
+        <div class="form-group">
+            <label for="phone">เบอร์โทรศัพท์:</label>
+            <input type="text" id="phone" placeholder="เช่น 0812345678">
+        </div>
+        
+        <div class="form-group">
+            <label for="theme">เลือกโทนสีพื้นหลัง (Theme):</label>
+            <select id="theme" onchange="changeTheme(this.value)">
+                <option value="white">สีขาว (ปกติ)</option>
+                <option value="#ffe3e3">สีชมพูอ่อน</option> <option value="#e3f9e5">สีเขียวอ่อน</option>
+                <option value="#e1f5fe">สีฟ้าอ่อน</option>
+            </select>
+        </div>
+        
+        <div class="btn-group">
+            <button class="btn-save" onclick="saveData()">บันทึกข้อมูลลง localStorage</button>
+            <button class="btn-clear" onclick="clearData()">ล้างข้อมูล</button>
+        </div>
+        
+        <hr>
+        
+        <div class="link-wrapper">
+            <a href="lab4_1b.html" class="result-link" target="_blank">👉 เปิดไปหน้าแสดงผลลัพธ์ (lab4_1b.html)</a>
+        </div>
+    </div>
+
+    <script>
+    function changeTheme(color) {
+        document.getElementById("pageBody").style.backgroundColor = color;
+    }
+
+    function saveData() {
+        let name = document.getElementById("name").value;
+        let email = document.getElementById("email").value;
+        let phone = document.getElementById("phone").value;
+        let theme = document.getElementById("theme").value;
+
+        if(!name || !email || !phone) {
+            alert("กรุณากรอกข้อมูลให้ครบถ้วนก่อนบันทึก");
+            return;
+        }
+
+        localStorage.setItem("user_name", name);
+        localStorage.setItem("user_email", email);
+        localStorage.setItem("user_phone", phone);
+        localStorage.setItem("user_theme", theme);
+
+        alert("บันทึกข้อมูลเรียบร้อยแล้วครับ!");
+    }
+
+    function clearData() {
+        localStorage.clear();
+        document.getElementById("name").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("phone").value = "";
+        document.getElementById("theme").value = "white";
+        document.getElementById("pageBody").style.backgroundColor = "white";
+        alert("ล้างข้อมูลในระบบหมดแล้วครับ");
+    }
+
+    window.onload = function() {
+        let savedTheme = localStorage.getItem("user_theme");
+        if(savedTheme) {
+            document.getElementById("theme").value = savedTheme;
+            changeTheme(savedTheme);
+        }
+    }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 7.2: JSON & Array Methods</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f7f6; padding: 20px; line-height: 1.6; color: #333; }
+        .container { max-width: 700px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; }
+        .section { margin-bottom: 25px; padding: 20px; border-left: 5px solid #3498db; background: #f9f9f9; border-radius: 4px; }
+        .output-box { margin-top: 10px; padding: 15px; background: #fff; border: 1px solid #eee; border-radius: 8px; }
+        button { 
+            padding: 10px 20px; background-color: #3498db; color: white; border: none; 
+            border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; 
+        }
+        button:hover { background-color: #2980b9; }
+        input[type="file"] { margin-top: 10px; }
+        strong { color: #2c3e50; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Lab 7.2: การจัดการ JSON และ Array</h2>
+
+        <div class="section">
+            <h3>📂 ระบบ Import/Export ข้อมูล</h3>
+            <button onclick="exportJSON()">💾 Export เป็นไฟล์ JSON</button>
+            <br><br>
+            <label>Import ไฟล์ JSON:</label>
+            <input type="file" id="importFile" accept=".json" onchange="importJSON()">
+        </div>
+
+        <div class="section">
+            <h3>📊 ผลลัพธ์การประมวลผล</h3>
+            <div id="output-forEach" class="output-box"></div>
+            <div id="output-map" class="output-box"></div>
+            <div id="output-filter" class="output-box"></div>
+            <div id="output-reduce" class="output-box"></div>
+        </div>
+    </div>
+
+    <script>
+        let products = [
+            { id: 1, name: "Watch", price: 3000 },
+            { id: 3, name: "Bag", price: 1200 }
+        ];
+
+        function processData() {
+            // --- ประมวลผลและแสดงผล ---
+            document.getElementById("output-forEach").innerHTML = `<strong>[forEach] รายการสินค้า:</strong><br>` + 
+                products.map(item => `- ID: ${item.id}, ชื่อ: ${item.name}, ราคา: ${item.price} บาท`).join("<br>");
+
+            const mapData = products.map(item => `${item.name} (${item.price} บ.)`);
+            document.getElementById("output-map").innerHTML = `<strong>[map] รูปแบบใหม่:</strong> ${mapData.join(" | ")}`;
+
+            const filterData = products.filter(item => item.price > 1500);
+            document.getElementById("output-filter").innerHTML = `<strong>[filter] สินค้าราคา > 1500 บ.:</strong> ${filterData.map(i => i.name).join(", ") || "ไม่มี"}`;
+
+            const total = products.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById("output-reduce").innerHTML = `<strong>[reduce] ราคารวมทั้งหมด:</strong> ${total.toLocaleString()} บาท`;
+        }
+
+        function exportJSON() {
+            const blob = new Blob([JSON.stringify(products, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "products.json";
+            link.click();
+        }
+
+        function importJSON() {
+            const file = document.getElementById("importFile").files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    products = JSON.parse(e.target.result);
+                    alert("นำเข้าข้อมูลสำเร็จ!");
+                    processData();
+                } catch { alert("ไฟล์ JSON ไม่ถูกต้อง"); }
+            };
+            reader.readAsText(file);
+        }
+
+        processData();
+    </script>
+</body>
+</html>

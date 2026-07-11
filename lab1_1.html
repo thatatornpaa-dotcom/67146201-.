@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lab 1.1</title>
+  </head>
+  <body>
+    <div id="output"></div>
+
+    <script>
+      let studentName = "Tharatorn";
+      let studentAge = 21;
+      let isGraduated = false;
+      let scores = [85, 90, 78];
+      let student = { id: "67146201", name: "Tharatorn", grade: "A" };
+
+      console.log("Name:", studentName, "Type:", typeof studentName);
+      console.log("Age:", studentAge, "Type:", typeof studentAge);
+
+      document.getElementById("output").innerHTML = `
+            Name: ${studentName}<br>
+            Age: ${studentAge}<br>
+            Average Grade: ${(scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2)}
+        `;
+
+      let scoreString = "85";
+      let gpaString = "3.70";
+      let ageNumber = 21;
+
+      let parsedInt = parseInt(scoreString);
+      let parsedFloat = parseFloat(gpaString);
+      let convertedString = String(ageNumber);
+
+      console.log("--- ผลการแปลงชนิดข้อมูล (ขั้นตอนที่ 4) ---");
+      console.log("parseInt:", parsedInt, "Type:", typeof parsedInt);
+      console.log("parseFloat:", parsedFloat, "Type:", typeof parsedFloat);
+      console.log(
+        "String():",
+        convertedString,
+        "Type:",
+        typeof convertedString,
+      );
+
+      document.getElementById("output").innerHTML += `
+            <hr>
+            <strong>[ผลการทดสอบแปลงชนิดข้อมูล]</strong><br>
+            parseInt("${scoreString}") = ${parsedInt} (Type: ${typeof parsedInt})<br>
+            parseFloat("${gpaString}") = ${parsedFloat} (Type: ${typeof parsedFloat})<br>
+            String(${ageNumber}) = "${convertedString}" (Type: ${typeof convertedString})
+        `;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เครื่องคำนวณสินเชื่อบ้านมือโปร</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #64748b;
+            --success: #059669;
+            --bg: #f8fafc;
+        }
+
+        body { font-family: 'Kanit', sans-serif; background-color: var(--bg); color: #1e293b; padding: 20px; }
+        .container { max-width: 950px; margin: 0 auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        h2 { text-align: center; color: #1e293b; margin-bottom: 30px; font-weight: 600; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .form-group label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; color: #64748b; }
+        
+        input, select { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 16px; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); }
+        
+        button { 
+            grid-column: 1 / -1; padding: 15px; background: var(--primary); color: white; border: none; 
+            border-radius: 10px; font-size: 18px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 10px;
+        }
+        button:hover { background: #1d4ed8; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3); }
+
+        .summary-box { display: none; background: #f1f5f9; padding: 25px; border-radius: 15px; margin-top: 30px; }
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .stat-card { background: white; padding: 15px; border-radius: 10px; border-left: 4px solid var(--primary); }
+        .stat-card span { display: block; font-size: 12px; color: #64748b; }
+        .stat-card strong { font-size: 18px; color: #1e293b; }
+
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 30px; display: none; }
+        th { background: #1e293b; color: white; padding: 15px; }
+        th:first-child { border-top-left-radius: 10px; }
+        th:last-child { border-top-right-radius: 10px; }
+        td { padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: right; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🏠 คำนวณค่างวดสินเชื่อบ้าน</h2>
+    
+    <div class="grid">
+        <div class="form-group">
+            <label>ราคาบ้าน (บาท)</label>
+            <input type="number" id="homePrice" value="3000000" oninput="calculateLoanAmount()">
+        </div>
+        <div class="form-group">
+            <label>เงินดาวน์ (บาท)</label>
+            <input type="number" id="downPayment" value="300000" oninput="calculateLoanAmount()">
+        </div>
+        <div class="form-group">
+            <label>วงเงินกู้สุทธิ (บาท)</label>
+            <input type="text" id="loanAmount" readonly style="background:#f1f5f9;">
+        </div>
+        <div class="form-group">
+            <label>ดอกเบี้ย (% ต่อปี)</label>
+            <input type="number" id="interestRate" step="0.01" value="5">
+        </div>
+        <div class="form-group">
+            <label>ระยะเวลาผ่อน (ปี)</label>
+            <select id="years">
+                <option value="15">15 ปี</option>
+                <option value="30">30 ปี</option>
+                <option value="45" selected>45 ปี</option>
+            </select>
+        </div>
+        <button onclick="calculateLoan()">เริ่มคำนวณยอดผ่อนชำระ</button>
+    </div>
+
+    <div id="summary" class="summary-box">
+        <h3 style="margin-top:0; color:var(--primary);">สรุปผลการคำนวณ</h3>
+        <div class="summary-grid">
+            <div class="stat-card"><span>ค่างวดต่อเดือน</span><strong id="sumMonthlyPay">0.00</strong></div>
+            <div class="stat-card"><span>ดอกเบี้ยรวม</span><strong id="sumTotalInterest">0.00</strong></div>
+            <div class="stat-card"><span>ยอดรวมทั้งสัญญา</span><strong id="sumTotalPayment">0.00</strong></div>
+        </div>
+    </div>
+
+    <table id="amortizationTable">
+        <thead>
+            <tr><th>งวดที่</th><th>ต้นคงเหลือ</th><th>ค่างวด</th><th>ดอกเบี้ย</th><th>เงินต้น</th></tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+</div>
+
+<script>
+    function format(num) { return num.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+    
+    function calculateLoanAmount() {
+        let loan = (parseFloat(document.getElementById("homePrice").value) || 0) - (parseFloat(document.getElementById("downPayment").value) || 0);
+        document.getElementById("loanAmount").value = loan.toLocaleString();
+    }
+
+    function calculateLoan() {
+        let loanAmount = (parseFloat(document.getElementById("homePrice").value) - parseFloat(document.getElementById("downPayment").value));
+        let rate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
+        let months = parseInt(document.getElementById("years").value) * 12;
+        
+        let payment = (loanAmount * rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
+        
+        let balance = loanAmount, totalInterest = 0, html = "";
+        for (let i = 1; i <= months; i++) {
+            let interest = balance * rate;
+            let principal = payment - interest;
+            totalInterest += interest;
+            html += `<tr><td>${i}</td><td>${format(balance)}</td><td>${format(payment)}</td><td>${format(interest)}</td><td>${format(principal)}</td></tr>`;
+            balance -= principal;
+            if (i > 24) break; // แสดงเฉพาะ 2 ปีแรกเพื่อไม่ให้หน้าเว็บยาวเกินไป
+        }
+
+        document.getElementById("sumMonthlyPay").innerText = format(payment);
+        document.getElementById("sumTotalInterest").innerText = format(totalInterest);
+        document.getElementById("sumTotalPayment").innerText = format(loanAmount + totalInterest);
+        document.getElementById("tableBody").innerHTML = html;
+        document.getElementById("summary").style.display = "block";
+        document.getElementById("amortizationTable").style.display = "table";
+    }
+    
+    calculateLoanAmount();
+</script>
+</body>
+</html>

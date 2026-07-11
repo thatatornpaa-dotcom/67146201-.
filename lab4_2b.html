@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lab4_2b.html</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* คุมโทนสี Warm Cozy สไตล์มินิมอล */
+        :root {
+            --bg-color: #faf8f5;       
+            --primary-color: #2e2520;  
+            --accent-color: #ff7a59;   
+            --card-bg: #ffffff;        
+            --border-color: #e6e1da;    
+            --empty-color: #de5246;   /* สีแดงโทนละมุนสำหรับแจ้งเตือนตะกร้าว่าง */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            font-family: 'Sarabun', sans-serif;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* กล่องตะกร้าสินค้า */
+        .cart-container {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 520px;
+            padding: 35px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(46, 37, 32, 0.04);
+            border: 1px solid var(--border-color);
+        }
+
+        h2 {
+            font-family: 'Plus Jakarta Sans', 'Sarabun', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 25px;
+            letter-spacing: -0.5px;
+        }
+
+        h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #52463e;
+            border-left: 3px solid var(--accent-color);
+            padding-left: 10px;
+        }
+
+        /* ตารางและลิสต์รายการสินค้าสไตล์บิลใบเสร็จ */
+        .cart-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px dashed var(--border-color);
+            font-size: 15px;
+        }
+
+        .item-name {
+            font-weight: 500;
+        }
+
+        .item-details {
+            color: #70655e;
+            font-size: 14px;
+        }
+
+        .item-price {
+            font-weight: 700;
+        }
+
+        /* กล่องสรุปราคารวมด้านล่าง */
+        .total-box {
+            background-color: #fcfbfa;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .total-label {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .total-amount {
+            font-family: 'Plus Jakarta Sans', 'Sarabun', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        /* สไตล์ข้อความเมื่อไม่มีสินค้าในตะกร้า */
+        .empty-message {
+            background-color: #fff5f5;
+            border: 1px solid #fed7d7;
+            color: var(--empty-color);
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        /* ปุ่มและลิงก์สำหรับย้อนกลับ */
+        .back-btn-wrapper {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            width: 100%;
+            background-color: var(--primary-color);
+            color: #ffffff;
+            text-decoration: none;
+            text-align: center;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background-color: #40342d;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cart-container">
+        <h2>หน้าแสดงข้อมูลในตะกร้า (หน้า 2b)</h2>
+        
+        <div id="cartDisplay"></div>
+        
+        <div class="back-btn-wrapper">
+            <a href="lab4_2a.html" class="back-btn">← กลับไปเลือกซื้อสินค้า (หน้า lab4_2a.html)</a>
+        </div>
+    </div>
+
+    <script>
+    function loadCart() {
+        // ดึงค่าจาก sessionStorage
+        let tshirtQty = parseInt(sessionStorage.getItem("cart_tshirt_qty")) || 0;
+        let jeansQty = parseInt(sessionStorage.getItem("cart_jeans_qty")) || 0;
+
+        let tshirtPrice = 250;
+        let jeansPrice = 790;
+
+        let tshirtTotal = tshirtQty * tshirtPrice;
+        let jeansTotal = jeansQty * jeansPrice;
+        let grandTotal = tshirtTotal + jeansTotal;
+
+        let cartDiv = document.getElementById("cartDisplay");
+
+        if (tshirtQty > 0 || jeansQty > 0) {
+            cartDiv.innerHTML = `
+                <h4>รายการสินค้าในตะกร้าของคุณ</h4>
+                <ul class="cart-list">
+                    <li class="cart-item">
+                        <div>
+                            <span class="item-name">👕 เสื้อยืด</span>
+                            <div class="item-details">${tshirtQty} ตัว x 250 บาท</div>
+                        </div>
+                        <span class="item-price">฿${tshirtTotal.toFixed(2)}</span>
+                    </li>
+                    <li class="cart-item">
+                        <div>
+                            <span class="item-name">👖 กางเกงยีนส์</span>
+                            <div class="item-details">${jeansQty} ตัว x 790 บาท</div>
+                        </div>
+                        <span class="item-price">฿${jeansTotal.toFixed(2)}</span>
+                    </li>
+                </ul>
+                <div class="total-box">
+                    <span class="total-label">ราคารวมทั้งสิ้น:</span>
+                    <span class="total-amount">฿${grandTotal.toFixed(2)}</span>
+                </div>
+            `;
+        } else {
+            cartDiv.innerHTML = `
+                <div class="empty-message">
+                    📭 ไม่มีสินค้าในตะกร้าชั่วคราว (กรุณากลับไปเลือกที่หน้า 2a)
+                </div>
+            `;
+        }
+    }
+
+    // ทำงานทันทีเมื่อเปิดหน้าเว็บ
+    window.onload = loadCart;
+    </script>
+
+</body>
+</html>

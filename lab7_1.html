@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>ระบบจัดการข้อมูลนักเรียน (lab7_1)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+        h2 { color: #2d3436; text-align: center; }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #0984e3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #74b9ff; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background-color: #dfe6e9; padding: 12px; text-align: left; }
+        td { border-bottom: 1px solid #eee; padding: 12px; }
+        .grade-a-box {
+            padding: 15px;
+            background-color: #e8f8f5;
+            border-left: 5px solid #27ae60;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>📊 ระบบจัดการข้อมูลนักเรียน</h2>
+        <button onclick="displayStudents()">แสดงข้อมูลและคำนวณผลลัพธ์</button>
+        
+        <div id="studentTable"></div>
+        <div id="gradeA"></div>
+    </div>
+
+    <script>
+    const students = [
+        { id: 1, name: "ขันแดง จานดี", scores: [85, 90, 88], grade: "A" },
+        { id: 2, name: "ขันเขียว จานดำ", scores: [75, 80, 78], grade: "B" },
+        { id: 3, name: "ขันฟ้า จานลาย", scores: [95, 92, 94], grade: "A" },
+        { id: 4, name: "ขันขาว จานเดียว", scores: [65, 70, 68], grade: "C" }
+    ];
+
+    function displayStudents() {
+        // สร้างตาราง
+        let tableHtml = "<table><tr><th>ID</th><th>ชื่อ</th><th>คะแนนเฉลี่ย</th><th>เกรด</th></tr>";
+        
+        students.forEach(student => {
+            let avgScore = student.scores.reduce((a, b) => a + b, 0) / student.scores.length;
+            tableHtml += `
+                <tr>
+                    <td>${student.id}</td>
+                    <td>${student.name}</td>
+                    <td>${avgScore.toFixed(2)}</td>
+                    <td><strong>${student.grade}</strong></td>
+                </tr>
+            `;
+        });
+        tableHtml += "</table>";
+        document.getElementById("studentTable").innerHTML = tableHtml;
+
+        // สรุปเกรด A
+        let gradeA = students.filter(s => s.grade === "A");
+        document.getElementById("gradeA").innerHTML = `
+            <div class="grade-a-box">
+                <p><strong>🏆 นักเรียนที่ได้เกรด A:</strong><br>
+                <span style="color: #27ae60; font-size: 1.1em;">${gradeA.map(s => s.name).join(", ")}</span></p>
+            </div>
+        `;
+    }
+    </script>
+
+</body>
+</html>

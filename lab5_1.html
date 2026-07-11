@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>ระบบคำนวณราคาสินค้า (lab5_1)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px;
+        }
+        h2 { color: #2d3436; text-align: center; }
+        .product-item {
+            background: #f8f9fa;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            border: 1px solid #e9ecef;
+        }
+        input[type="checkbox"] { transform: scale(1.3); margin-right: 15px; cursor: pointer; }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #6c5ce7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #5b4bc4; }
+        #result {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f1f8ff;
+            border-radius: 10px;
+            border-left: 5px solid #0984e3;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>🛍️ รายการสินค้า</h2>
+        <form id="productForm">
+            <div class="product-item"><input type="checkbox" id="item0"> <span id="name0"></span> (<span id="price0"></span> บาท)</div>
+            <div class="product-item"><input type="checkbox" id="item1"> <span id="name1"></span> (<span id="price1"></span> บาท)</div>
+            <div class="product-item"><input type="checkbox" id="item2"> <span id="name2"></span> (<span id="price2"></span> บาท)</div>
+            
+            <button type="button" onclick="calculateTotal()">คำนวณราคาทั้งหมด</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+    const products = [
+        { name: "เสื้อเชิ้ตทำงาน", price: 350 },
+        { name: "กางเกงสแลค", price: 490 },
+        { name: "เข็มขัดหนัง", price: 220 }
+    ];
+
+    window.onload = function() {
+        for (let i = 0; i < products.length; i++) {
+            document.getElementById(`name${i}`).innerText = products[i].name;
+            document.getElementById(`price${i}`).innerText = products[i].price;
+        }
+    };
+
+    function calculateTotal() {
+        let subTotal = 0;
+        let selectedItemsHtml = "";
+
+        for (let i = 0; i < products.length; i++) {
+            let checkbox = document.getElementById(`item${i}`);
+            if (checkbox.checked) {
+                subTotal += products[i].price;
+                selectedItemsHtml += `<li>${products[i].name} - ${products[i].price} บาท</li>`;
+            }
+        }
+
+        let resultDiv = document.getElementById("result");
+        if (subTotal === 0) {
+            resultDiv.style.display = "block";
+            resultDiv.style.borderLeftColor = "#d63031";
+            resultDiv.innerHTML = "<p style='color:red; font-weight:bold;'>กรุณาเลือกสินค้าอย่างน้อย 1 รายการครับ</p>";
+            return;
+        }
+
+        let discountPercent = (subTotal > 1000) ? 15 : (subTotal > 500) ? 10 : 0;
+        let discountAmount = subTotal * (discountPercent / 100);
+        let finalTotal = subTotal - discountAmount;
+
+        resultDiv.style.display = "block";
+        resultDiv.style.borderLeftColor = "#0984e3";
+        resultDiv.innerHTML = `
+            <h4 style="margin-top:0;">สรุปยอดการสั่งซื้อ</h4>
+            <ul style="padding-left: 20px;">${selectedItemsHtml}</ul>
+            <p>ราคารวม: ${subTotal.toFixed(2)} บาท</p>
+            <p style="color: #0984e3;">ส่วนลด (${discountPercent}%): -${discountAmount.toFixed(2)} บาท</p>
+            <hr>
+            <p style="font-size: 1.2em; color: #2d3436;"><strong>ยอดชำระสุทธิ: ${finalTotal.toFixed(2)} บาท</strong></p>
+        `;
+    }
+    </script>
+
+</body>
+</html>

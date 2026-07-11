@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>lab3_3.html</title>
+</head>
+<body>
+
+    <h2>คำนวณค่าไฟฟ้า</h2>
+    
+    <label>เลขหน่วยครั้งก่อน:</label>
+    <input type="number" id="prevUnit"><br><br>
+    
+    <label>เลขหน่วยครั้งนี้:</label>
+    <input type="number" id="currentUnit"><br><br>
+    
+    <button onclick="calculateElectricity()">คำนวณค่าไฟ</button>
+    
+    <hr>
+    <div id="result"></div>
+
+    <script>
+    function calculateElectricity() {
+        let prevInput = document.getElementById("prevUnit").value;
+        let currentInput = document.getElementById("currentUnit").value;
+
+        if (prevInput === "" || currentInput === "") {
+            alert("กรุณากรอกข้อมูลเลขหน่วยไฟให้ครบถ้วน");
+            return;
+        }
+
+        let prevUnit = parseFloat(prevInput);
+        let currentUnit = parseFloat(currentInput);
+
+        if (currentUnit < prevUnit) {
+            alert("ข้อผิดพลาด: เลขหน่วยครั้งนี้ต้องไม่น้อยกว่าเลขหน่วยครั้งก่อน");
+            return;
+        }
+
+        let usedUnit = currentUnit - prevUnit;
+        let ftRate = 0.65; // ขั้นตอนที่ 4: ค่า Ft (กำหนดอยู่ในช่วง 0.5 - 1 บาท/หน่วยตามเกณฑ์)
+        let energyCost = 0;
+
+        if (usedUnit <= 150) {
+            energyCost = usedUnit * 3.25;
+        } else if (usedUnit <= 400) {
+            energyCost = (150 * 3.25) + ((usedUnit - 150) * 4.22);
+        } else {
+            energyCost = (150 * 3.25) + (250 * 4.22) + ((usedUnit - 400) * 4.42);
+        }
+
+        let ftCost = usedUnit * ftRate;
+        let totalBeforeVat = energyCost + ftCost;
+        let vat = totalBeforeVat * 0.07;
+        let total = totalBeforeVat + vat;
+
+        document.getElementById("result").innerHTML = `
+            <h4>สรุปรายละเอียดการคำนวณค่าไฟฟ้า</h4>
+            <p>จำนวนหน่วยไฟที่ใช้ทั้งหมด: ${usedUnit.toFixed(2)} หน่วย</p>
+            <p>1. ค่าพลังงานไฟฟ้า (อัตราก้าวหน้า): ${energyCost.toFixed(2)} บาท</p>
+            <p>2. ค่า Ft (${ftRate} บาท/หน่วย): ${ftCost.toFixed(2)} บาท</p>
+            <p>ยอดรวมก่อนภาษีมูลค่าเพิ่ม: ${totalBeforeVat.toFixed(2)} บาท</p>
+            <p>3. ภาษีมูลค่าเพิ่ม (VAT 7%): ${vat.toFixed(2)} บาท</p>
+            <p><strong>จำนวนเงินรวมทั้งสิ้นที่ต้องชำระ: ${total.toFixed(2)} บาท</strong></p>
+        `;
+    }
+    </script>
+
+</body>
+</html>

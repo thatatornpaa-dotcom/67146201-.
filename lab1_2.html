@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lab 1.2 - Pseudocode Report</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700&family=Sarabun:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* รีเซ็ตค่าและตั้งค่าธีมหลัก */
+        :root {
+            --bg-color: #f3f4f6;       
+            --text-color: #1f2937;     
+            --text-muted: #6b7280;     
+            --card-bg: #ffffff;        
+            --code-bg: #1e1e2e;       
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Sarabun', sans-serif;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .lab-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .lab-header h1 {
+            font-family: 'Plus Jakarta Sans', 'Sarabun', sans-serif;
+            font-size: 28px;
+            color: #111827;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .student-info {
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        .lab-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            margin-bottom: 30px;
+            position: relative;
+            border: 1px solid #e5e7eb;
+        }
+
+        .lab-card h3 {
+            font-size: 20px;
+            color: #111827;
+            margin-bottom: 6px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .description {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .card-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-blue { background: #dbeafe; color: #1e40af; }
+        .badge-purple { background: #f3e8ff; color: #6b21a8; }
+        .badge-amber { background: #fef3c7; color: #92400e; }
+
+        .code-block {
+            background-color: var(--code-bg);
+            border-radius: 12px;
+            padding: 20px;
+            overflow-x: auto;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .code-block pre {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 14px;
+            color: #cdd6f4; 
+        }
+
+        .code-comment { color: #6c7086; font-style: italic; } 
+        .code-keyword { color: #f38ba8; font-weight: bold; } 
+        .code-input { color: #89b4fa; font-weight: bold; }  
+        .code-output { color: #a6e3a1; font-weight: bold; } 
+        .code-set { color: #fab387; }                         
+        .code-conditional { color: #f9e2af; font-weight: bold; } 
+
+
+        .lab-footer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-top: 5px;
+            padding: 20px 0;
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 20px 10px; }
+            .lab-card { padding: 20px; }
+            .lab-header h1 { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+        <section class="lab-card">
+            <div class="card-badge badge-blue">ข้อที่ 1</div>
+            <h3>การคำนวณพื้นที่วงกลม</h3>
+            <p class="description">กระบวนการรับค่ารัศมีเพื่อนำมาคำนวณหาพื้นที่ของวงกลมด้วยสูตรทางคณิตศาสตร์</p>
+            <div class="code-block">
+                <pre>
+<span class="code-comment">// Pseudocode: การคำนวณพื้นที่วงกลม</span>
+<span class="code-keyword">BEGIN</span>
+    <span class="code-input">INPUT</span> radius
+    <span class="code-set">SET</span> PI = 3.14159
+    <span class="code-set">SET</span> area = PI * radius * radius
+    <span class="code-output">OUTPUT</span> "Area of the circle is: " + area
+<span class="code-keyword">END</span></pre>
+            </div>
+        </section>
+
+        <section class="lab-card">
+            <div class="card-badge badge-purple">ข้อที่ 2</div>
+            <h3>การคำนวณเกรด (Grading System)</h3>
+            <p class="description">การใช้เงื่อนไขตรวจสอบคะแนนแบบหลายชั้น (Nested-If) เพื่อประเมินระดับผลการเรียน</p>
+            <div class="code-block">
+                <pre>
+<span class="code-comment">// Pseudocode: การคำนวณเกรด</span>
+<span class="code-keyword">BEGIN</span>
+    <span class="code-input">INPUT</span> score
+    <span class="code-conditional">IF</span> score >= 80 <span class="code-conditional">THEN</span>
+        <span class="code-set">SET</span> grade = "A"
+    <span class="code-conditional">ELSE IF</span> score >= 70 <span class="code-conditional">THEN</span>
+        <span class="code-set">SET</span> grade = "B"
+    <span class="code-conditional">ELSE IF</span> score >= 60 <span class="code-conditional">THEN</span>
+        <span class="code-set">SET</span> grade = "C"
+    <span class="code-conditional">ELSE IF</span> score >= 50 <span class="code-conditional">THEN</span>
+        <span class="code-set">SET</span> grade = "D"
+    <span class="code-conditional">ELSE</span>
+        <span class="code-set">SET</span> grade = "F"
+    <span class="code-conditional">ENDIF</span>
+    <span class="code-output">OUTPUT</span> "Your grade is: " + grade
+<span class="code-keyword">END</span></pre>
+            </div>
+        </section>
+
+        <section class="lab-card">
+            <div class="card-badge badge-amber">ข้อที่ 3</div>
+            <h3>การหาค่าสูงสุดจากตัวเลข 3 จำนวน</h3>
+            <p class="description">อัลกอริทึมเปรียบเทียบชุดข้อมูลเพื่อคัดเลือกค่าที่มากที่สุดมาแสดงผล</p>
+            <div class="code-block">
+                <pre>
+<span class="code-comment">// Pseudocode: การหาค่าสูงสุดใน 3 จำนวน</span>
+<span class="code-keyword">BEGIN</span>
+    <span class="code-input">INPUT</span> num1, num2, num3
+    <span class="code-set">SET</span> max_value = num1
+    
+    <span class="code-conditional">IF</span> num2 > max_value <span class="code-conditional">THEN</span>
+        <span class="code-set">SET</span> max_value = num2
+    <span class="code-conditional">ENDIF</span>
+    
+    <span class="code-conditional">IF</span> num3 > max_value <span class="code-conditional">THEN</span>
+        <span class="code-set">SET</span> max_value = num3
+    <span class="code-conditional">ENDIF</span>
+    
+    <span class="code-output">OUTPUT</span> "The maximum value is: " + max_value
+<span class="code-keyword">END</span></pre>
+            </div>
+        </section>
+
+        <footer class="lab-footer">
+            <p>© 2026 Computer Science Lab Report. All Rights Reserved.</p>
+        </footer>
+    </div>
+
+</body>
+</html>

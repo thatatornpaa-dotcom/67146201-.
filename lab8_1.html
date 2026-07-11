@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 8.1: ระบบคำนวณสินเชื่อ</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .form-group { margin-bottom: 12px; }
+        label { display: inline-block; width: 150px; font-weight: bold; }
+        input { padding: 6px; width: 200px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 8px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #0056b3; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: right; }
+        th { background-color: #f2f2f2; text-align: center; }
+        td:first-child { text-align: center; }
+        .summary-box { background-color: #e9ecef; padding: 15px; border-radius: 4px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <h2>8.1: ระบบคำนวณสินเชื่อ (สร้างตารางผ่อนชำระด้วย loop)</h2>
+
+    <div class="form-group">
+        <label for="loanAmount">จำนวนเงินกู้ (บาท):</label>
+        <input type="number" id="loanAmount" value="100000" placeholder="ระบุจำนวนเงินต้น">
+    </div>
+    <div class="form-group">
+        <label for="interestRate">อัตราดอกเบี้ยต่อปี (%):</label>
+        <input type="number" id="interestRate" step="0.1" value="5" placeholder="เช่น 5 หรือ 7.5">
+    </div>
+    <div class="form-group">
+        <label for="months">ระยะเวลาผ่อน (เดือน):</label>
+        <input type="number" id="months" value="12" placeholder="ระบุจำนวนเดือน">
+    </div>
+    
+    <button onclick="generateAmortizationTable()">คำนวณตารางผ่อนชำระ</button>
+
+    <div id="summary" class="summary-box">
+        <p>กรุณากรอกข้อมูลแล้วกดปุ่มคำนวณ</p>
+    </div>
+
+    <div id="amortizationTable"></div>
+
+    <script>
+        // โค้ด JavaScript หลักของคุณทำงานได้ถูกต้องสมบูรณ์อยู่แล้วครับ
+        function generateAmortizationTable() {
+            let loanAmount = parseFloat(document.getElementById("loanAmount").value);
+            let interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
+            let months = parseInt(document.getElementById("months").value);
+
+            // ตรวจสอบค่าว่างเบื้องต้น ป้องกัน Error
+            if (isNaN(loanAmount) || isNaN(interestRate) || !months) {
+                alert("กรุณากรอกข้อมูลให้ครบถ้วนและถูกต้อง");
+                return;
+            }
+
+            let monthlyPayment = (loanAmount * interestRate * Math.pow(1 + interestRate, months)) /
+                                 (Math.pow(1 + interestRate, months) - 1);
+
+            let tableHtml = "<table><tr><th>งวดที่</th><th>ค่างวด</th><th>ดอกเบี้ย</th><th>เงินต้น</th><th>คงเหลือ</th></tr>";
+            let remaining = loanAmount;
+            let totalInterest = 0;
+
+            for (let i = 1; i <= months; i++) {
+                let interest = remaining * interestRate;
+                let principal = monthlyPayment - interest;
+                remaining -= principal;
+                totalInterest += interest;
+
+                tableHtml += `<tr><td>${i}</td>
+                    <td>${monthlyPayment.toFixed(2)}</td>
+                    <td>${interest.toFixed(2)}</td>
+                    <td>${principal.toFixed(2)}</td>
+                    <td>${Math.max(0, remaining).toFixed(2)}</td>
+                </tr>`;
+            }
+            tableHtml += "</table>";
+            
+            document.getElementById("amortizationTable").innerHTML = tableHtml;
+            document.getElementById("summary").innerHTML = `
+                <h3>สรุปยอดการคำนวณ</h3>
+                <p><strong>ค่างวดต่อเดือน:</strong> ${monthlyPayment.toFixed(2)} บาท</p>
+                <p><strong>รวมเงินที่ต้องชำระทั้งสิ้น:</strong> ${(monthlyPayment * months).toFixed(2)} บาท</p>
+                <p><strong>ดอกเบี้ยรวมทั้งหมด:</strong> ${totalInterest.toFixed(2)} บาท</p>
+            `;
+        }
+    </script>
+</body>
+</html>

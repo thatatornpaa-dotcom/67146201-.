@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 8.2: ระบบขายสินค้า คำนวณ VAT และส่วนลด</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; max-width: 900px; margin: 0 auto; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: right; }
+        th { background-color: #f4f4f4; text-align: center; }
+        td:first-child { text-align: center; }
+        h3 { color: #333; border-left: 4px solid #007bff; padding-left: 8px; }
+        .summary-table td { font-weight: bold; background-color: #fafafa; }
+        .total-row { color: red; font-size: 1.1em; }
+    </style>
+</head>
+<body>
+
+    <h2>8.2: การคำนวณภาษีมูลค่าเพิ่มและส่วนลดในตาราง</h2>
+    <p>อ้างอิงข้อมูลสินค้า 5 รายการจาก Array</p>
+
+    <h3>1. ตารางแสดงผลด้วย For Loop</h3>
+    <div id="table-for"></div>
+
+    <h3>2. ตารางแสดงผลด้วย While Loop</h3>
+    <div id="table-while"></div>
+
+    <h3>3. ตารางแสดงผลด้วย Do-While Loop</h3>
+    <div id="table-dowhile"></div>
+
+    <script>
+        // เงื่อนไขเพิ่มเติม 1): สร้าง Array สินค้าอย่างน้อย 5 รายการ
+        const products = [
+            { name: "Keyboard", price: 1200, qty: 2 },
+            { name: "Mouse", price: 500, qty: 3 },
+            { name: "Monitor", price: 4500, qty: 1 },
+            { name: "Speaker", price: 1500, qty: 1 },
+            { name: "Headphones", price: 800, qty: 2 }
+        ];
+
+        // ฟังก์ชันช่วยสร้างหัวตาราง (HTML String)
+        const tableHeader = `<table>
+            <tr>
+                <th>ลำดับ</th>
+                <th>ชื่อสินค้า</th>
+                <th>ราคา (บาท)</th>
+                <th>จำนวน</th>
+                <th>รวม (บาท)</th>
+            </tr>`;
+
+        // ฟังก์ชันคำนวณและสร้างแถวสรุปท้ายตาราง (ขั้นตอนที่ 5 และ 6)
+        function generateSummaryRows(subTotal) {
+            // เงื่อนไขเพิ่มเติม 4) คำนวณส่วนลดตามเงื่อนไขที่กำหนด
+            let discountPercent = 0;
+            if (subTotal >= 10000) {
+                discountPercent = 10;
+            } else if (subTotal >= 5000) {
+                discountPercent = 5;
+            }
+
+            let discount = subTotal * (discountPercent / 100);
+            let priceAfterDiscount = subTotal - discount;
+            
+            // เงื่อนไขเพิ่มเติม 5) คำนวณ VAT 7% (คิดหลังจากหักส่วนลดแล้ว)
+            let vat = priceAfterDiscount * 0.07;
+            
+            // เงื่อนไขเพิ่มเติม 6) แสดงยอดสุทธิที่ต้องชำระ
+            let netTotal = priceAfterDiscount + vat;
+
+            return `
+                <tr class="summary-table">
+                    <td colspan="4">ยอดรวมก่อนส่วนลด (Sub-Total):</td>
+                    <td>${subTotal.toFixed(2)}</td>
+                </tr>
+                <tr class="summary-table">
+                    <td colspan="4">ส่วนลด (${discountPercent}%):</td>
+                    <td>- ${discount.toFixed(2)}</td>
+                </tr>
+                <tr class="summary-table">
+                    <td colspan="4">ภาษีมูลค่าเพิ่ม (VAT 7%):</td>
+                    <td>${vat.toFixed(2)}</td>
+                </tr>
+                <tr class="summary-table total-row">
+                    <td colspan="4">ยอดสุทธิที่ต้องชำระ (Net Total):</td>
+                    <td>${netTotal.toFixed(2)}</td>
+                </tr>
+            </table>`;
+        }
+
+        // ==========================================
+        // ขั้นตอนที่ 2: เขียนแบบ FOR LOOP
+        // ==========================================
+        let forHtml = tableHeader;
+        let forSubTotal = 0;
+
+        for (let i = 0; i < products.length; i++) {
+            let rowTotal = products[i].price * products[i].qty;
+            forSubTotal += rowTotal;
+            forHtml += `<tr>
+                <td>${i + 1}</td>
+                <td style="text-align:left;">${products[i].name}</td>
+                <td>${products[i].price.toFixed(2)}</td>
+                <td>${products[i].qty}</td>
+                <td>${rowTotal.toFixed(2)}</td>
+            </tr>`;
+        }
+        forHtml += generateSummaryRows(forSubTotal);
+        document.getElementById("table-for").innerHTML = forHtml;
+
+
+        // ==========================================
+        // ขั้นตอนที่ 3: เขียนแบบ WHILE LOOP
+        // ==========================================
+        let whileHtml = tableHeader;
+        let whileSubTotal = 0;
+        let j = 0;
+
+        while (j < products.length) {
+            let rowTotal = products[j].price * products[j].qty;
+            whileSubTotal += rowTotal;
+            whileHtml += `<tr>
+                <td>${j + 1}</td>
+                <td style="text-align:left;">${products[j].name}</td>
+                <td>${products[j].price.toFixed(2)}</td>
+                <td>${products[j].qty}</td>
+                <td>${rowTotal.toFixed(2)}</td>
+            </tr>`;
+            j++;
+        }
+        whileHtml += generateSummaryRows(whileSubTotal);
+        document.getElementById("table-while").innerHTML = whileHtml;
+
+
+        // ==========================================
+        // ขั้นตอนที่ 4: เขียนแบบ DO-WHILE LOOP
+        // ==========================================
+        let doWhileHtml = tableHeader;
+        let doWhileSubTotal = 0;
+        let k = 0;
+
+        do {
+            let rowTotal = products[k].price * products[k].qty;
+            doWhileSubTotal += rowTotal;
+            doWhileHtml += `<tr>
+                <td>${k + 1}</td>
+                <td style="text-align:left;">${products[k].name}</td>
+                <td>${products[k].price.toFixed(2)}</td>
+                <td>${products[k].qty}</td>
+                <td>${rowTotal.toFixed(2)}</td>
+            </tr>`;
+            k++;
+        } while (k < products.length);
+
+        doWhileHtml += generateSummaryRows(doWhileSubTotal);
+        document.getElementById("table-dowhile").innerHTML = doWhileHtml;
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>ระบบกรองสินค้า (lab6_2)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+        h2 { color: #2c3e50; text-align: center; }
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th { background-color: #3498db; color: white; padding: 12px; text-align: left; }
+        td { border-bottom: 1px solid #ddd; padding: 12px; }
+        tr:hover { background-color: #f1f1f1; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>🛍️ กรองรายการสินค้า</h2>
+        <label>เลือกหมวดหมู่สินค้า:</label>
+        <select id="categoryFilter" onchange="filterProducts()">
+            <option value="all">ทั้งหมด</option>
+            <option value="clothing">เสื้อผ้า</option>
+            <option value="equipment">อุปกรณ์</option>
+            <option value="food">อาหาร</option>
+        </select>
+        
+        <div id="productDisplay"></div>
+    </div>
+
+    <script>
+    const products = [
+        { name: "เสื้อยืดคอกลม", category: "clothing", price: 250, stock: 15 },
+        { name: "กางเกงยีนส์ขาเดฟ", category: "clothing", price: 790, stock: 8 },
+        { name: "เมาส์ไร้สาย", category: "equipment", price: 590, stock: 20 },
+        { name: "คีย์บอร์ดกลไก", category: "equipment", price: 1290, stock: 5 },
+        { name: "บะหมี่กึ่งสำเร็จรูป", category: "food", price: 8, stock: 100 },
+        { name: "ขนมปังโฮลวีต", category: "food", price: 42, stock: 12 }
+    ];
+
+    function getCategoryThai(cat) {
+        const map = { "clothing": "เสื้อผ้า", "equipment": "อุปกรณ์", "food": "อาหาร" };
+        return map[cat] || cat;
+    }
+
+    function filterProducts() {
+        let selectedCategory = document.getElementById("categoryFilter").value;
+        let filteredList = (selectedCategory === "all") 
+            ? products 
+            : products.filter(p => p.category === selectedCategory);
+
+        let displayDiv = document.getElementById("productDisplay");
+        
+        if (filteredList.length === 0) {
+            displayDiv.innerHTML = "<p style='text-align:center; color:#e74c3c; margin-top:20px;'>ไม่พบสินค้าในหมวดหมู่นี้</p>";
+            return;
+        }
+
+        let tableHtml = `
+            <h4>พบ ${filteredList.length} รายการ</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ชื่อสินค้า</th>
+                        <th>หมวดหมู่</th>
+                        <th>ราคา (บาท)</th>
+                        <th>คงเหลือ (ชิ้น)</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        filteredList.forEach(product => {
+            tableHtml += `
+                <tr>
+                    <td>${product.name}</td>
+                    <td>${getCategoryThai(product.category)}</td>
+                    <td>${product.price.toFixed(2)}</td>
+                    <td>${product.stock}</td>
+                </tr>
+            `;
+        });
+
+        tableHtml += "</tbody></table>";
+        displayDiv.innerHTML = tableHtml;
+    }
+
+    window.onload = filterProducts;
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>lab4_1b.html</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ตั้งค่าพื้นฐานและแอนิเมชันเวลาสลับสีธีม */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        body {
+            background-color: #fafafa;
+            color: #2d3748;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: background-color 0.4s ease; /* สลับสีพื้นหลังอย่างนุ่มนวล */
+        }
+
+        /* กล่องแสดงการ์ดโปรไฟล์ */
+        .profile-container {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 460px;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        h2 {
+            font-family: 'Plus Jakarta Sans', 'Sarabun', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+            color: #1a202c;
+            margin-bottom: 25px;
+        }
+
+        /* จัดระเบียบการแสดงข้อมูลข้อความ */
+        .info-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .info-item {
+            background-color: rgba(248, 250, 252, 0.7);
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 15px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #718096;
+        }
+
+        .info-value {
+            color: #2d3748;
+            font-weight: 500;
+            text-align: right;
+        }
+
+        /* ป้าย Badge สำหรับชื่อธีม */
+        .theme-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background-color: #e2e8f0;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        /* สไตล์แจ้งเตือนกรณีไม่มีข้อมูล */
+        .error-message {
+            background-color: #fff5f5;
+            border: 1px solid #fed7d7;
+            color: #e53e3e;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 25px;
+        }
+
+        /* ปุ่มโหลดข้อมูลใหม่ */
+        .btn-refresh {
+            width: 100%;
+            background-color: #1a202c;
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-refresh:hover {
+            background-color: #2d3748;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body id="pageBody">
+
+    <div class="profile-container">
+        <h2>หน้าแสดงข้อมูลที่บันทึกไว้ (หน้า 1b)</h2>
+        
+        <div id="displayArea"></div>
+        
+        <button class="btn-refresh" onclick="refreshData()">🔄 โหลดข้อมูลใหม่อีกครั้ง</button>
+    </div>
+
+    <script>
+    function loadSavedData() {
+        let name = localStorage.getItem("user_name");
+        let email = localStorage.getItem("user_email");
+        let phone = localStorage.getItem("user_phone");
+        let theme = localStorage.getItem("user_theme");
+
+        let displayDiv = document.getElementById("displayArea");
+
+        if (name && email && phone) {
+            // แสดงข้อมูลในรูปแบบลิสต์รายการสวยๆ
+            displayDiv.innerHTML = `
+                <div class="info-group">
+                    <div class="info-item">
+                        <span class="info-label">👤 ชื่อ-นามสกุล</span>
+                        <span class="info-value">${name}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">✉️ อีเมล</span>
+                        <span class="info-value">${email}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">📞 เบอร์โทรศัพท์</span>
+                        <span class="info-value">${phone}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">🎨 Theme ที่เลือกไว้</span>
+                        <span class="theme-badge">${theme}</span>
+                    </div>
+                </div>
+            `;
+            
+            // เปลี่ยน Theme สีพื้นหลังตามที่ดึงมาได้
+            document.getElementById("pageBody").style.backgroundColor = theme;
+        } else {
+            // แสดงกรณีไม่มีข้อมูล
+            displayDiv.innerHTML = `
+                <div class="error-message">
+                    📭 ยังไม่มีข้อมูลถูกบันทึกไว้ในระบบ<br>(กรุณากรอกข้อมูลจากหน้า 1a ก่อน)
+                </div>
+            `;
+            document.getElementById("pageBody").style.backgroundColor = "white";
+        }
+    }
+
+    function refreshData() {
+        loadSavedData();
+    }
+
+    // ทำงานทันทีเมื่อหน้าเว็บโหลดเสร็จ
+    window.onload = loadSavedData;
+    </script>
+
+</body>
+</html>

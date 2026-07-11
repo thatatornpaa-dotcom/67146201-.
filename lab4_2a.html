@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lab4_2a.html</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ตั้งค่าพื้นฐานและคุมโทนสี Warm Cozy */
+        :root {
+            --bg-color: #faf8f5;       /* สีครีมสว่าง นุ่มสายตา */
+            --primary-color: #2e2520;  /* สีน้ำตาลเข้มเกือบดำ สำหรับข้อความหลัก */
+            --accent-color: #ff7a59;   /* สีส้มอมชมพู สำหรับเน้นปุ่มสำคัญและลิงก์ */
+            --card-bg: #ffffff;        /* พื้นหลังการ์ดขาวสะอาด */
+            --border-color: #e6e1da;    /* เส้นขอบสีเบจอ่อน */
+            --btn-secondary: #f0ebe4;   /* สีปุ่มล้างตะกร้า */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            font-family: 'Sarabun', sans-serif;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* กล่องร้านค้าสไตล์มินิมอล */
+        .shop-container {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 480px;
+            padding: 35px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(46, 37, 32, 0.04);
+            border: 1px solid var(--border-color);
+        }
+
+        h2 {
+            font-family: 'Plus Jakarta Sans', 'Sarabun', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 25px;
+            letter-spacing: -0.5px;
+        }
+
+        /* การ์ดสินค้าแต่ละชิ้น */
+        .product-card {
+            background-color: #fcfbfa;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .product-card p {
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+        .product-card strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* ส่วนกรอกจำนวนตัวเลข */
+        .input-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #70655e;
+        }
+
+        input[type="number"] {
+            width: 80px;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: center;
+            color: var(--primary-color);
+            outline: none;
+            background-color: #fff;
+            transition: border-color 0.2s;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--accent-color);
+        }
+
+        /* โซนปุ่มกดควบคุม */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 12px;
+            margin-top: 25px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            border: none;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        /* ปุ่มบันทึกเด่นๆ */
+        button:first-of-type {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        button:first-of-type:hover {
+            background-color: #e56545;
+            transform: translateY(-1px);
+        }
+
+        /* ปุ่มล้างตะกร้าโทนเรียบ */
+        button:last-of-type {
+            background-color: var(--btn-secondary);
+            color: #61554e;
+        }
+
+        button:last-of-type:hover {
+            background-color: #e3dbd3;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px dashed var(--border-color);
+            margin: 20px 0;
+        }
+
+        /* ลิงก์ไปหน้าถัดไปแบบน่ารักๆ */
+        .cart-link-wrapper {
+            text-align: center;
+        }
+
+        .cart-link {
+            display: inline-block;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .cart-link:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="shop-container">
+        <h2>ฟอร์มเลือกสินค้า (หน้า 2a)</h2>
+        
+        <div class="product-card">
+            <p><strong>👕 เสื้อยืด</strong> (ตัวละ 250 บาท)</p>
+            <div class="input-group">
+                <label for="tshirtQty">ระบุจำนวนที่ต้องการซื้อ:</label>
+                <input type="number" id="tshirtQty" value="0" min="0">
+            </div>
+        </div>
+
+        <div class="product-card">
+            <p><strong>👖 กางเกงยีนส์</strong> (ตัวละ 790 บาท)</p>
+            <div class="input-group">
+                <label for="jeansQty">ระบุจำนวนที่ต้องการซื้อ:</label>
+                <input type="number" id="jeansQty" value="0" min="0">
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button onclick="addToCart()">บันทึกเข้าตะกร้าชั่วคราว</button>
+            <button onclick="clearCart()">ล้างตะกร้า</button>
+        </div>
+        
+        <hr>
+        
+        <div class="cart-link-wrapper">
+            <a href="lab4_2b.html" class="cart-link">🛒 คลิกตรงนี้เพื่อไปดูสินค้าในตะกร้า (หน้า 2b) →</a>
+        </div>
+    </div>
+
+    <script>
+    function addToCart() {
+        let tshirt = parseInt(document.getElementById("tshirtQty").value);
+        let jeans = parseInt(document.getElementById("jeansQty").value);
+
+        if (isNaN(tshirt) || tshirt < 0 || isNaN(jeans) || jeans < 0) {
+            alert("กรุณากรอกจำนวนสินค้าให้ถูกต้อง");
+            return;
+        }
+
+        // เก็บข้อมูลสินค้าใน sessionStorage
+        sessionStorage.setItem("cart_tshirt_qty", tshirt);
+        sessionStorage.setItem("cart_jeans_qty", jeans);
+
+        alert("เพิ่มสินค้าลงในตะกร้าชั่วคราวเรียบร้อยแล้ว");
+    }
+
+    function clearCart() {
+        sessionStorage.clear();
+        document.getElementById("tshirtQty").value = 0;
+        document.getElementById("jeansQty").value = 0;
+        alert("ล้างตะกร้าเรียบร้อยแล้ว");
+    }
+    </script>
+
+</body>
+</html>

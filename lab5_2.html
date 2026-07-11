@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>ระบบคำนวณราคาสินค้า (lab5_2)</title>
+    <style>
+        /* จัดวางให้อยู่กลางหน้าจอและใช้ฟอนต์สวยๆ */
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #eef2f3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h2 { color: #34495e; text-align: center; }
+        label { font-weight: bold; color: #7f8c8d; display: block; margin-top: 15px; }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 25px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #2980b9; }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>🚚 ระบบคำนวณราคาสินค้า</h2>
+        
+        <label>ราคาสินค้ารวม (บาท):</label>
+        <input type="number" id="productPrice" placeholder="กรอกราคาสินค้า">
+        
+        <label>รูปแบบการจัดส่ง:</label>
+        <select id="shippingMethod">
+            <option value="50">EMS (50 บาท)</option>
+            <option value="30">ลงทะเบียน (30 บาท)</option>
+            <option value="15">ธรรมดา (15 บาท)</option>
+        </select>
+        
+        <button onclick="calculateTotal()">คำนวณราคารวมทั้งหมด</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+    function calculateTotal() {
+        let priceInput = document.getElementById("productPrice").value;
+        
+        if (priceInput === "" || parseFloat(priceInput) < 0) {
+            alert("กรุณากรอกราคาสินค้าให้ถูกต้อง");
+            return;
+        }
+
+        let productPrice = parseFloat(priceInput);
+        let shippingCost = parseFloat(document.getElementById("shippingMethod").value);
+        let originalShippingCost = shippingCost;
+        let note = "";
+
+        if (productPrice >= 500) {
+            shippingCost = 0;
+            note = "<br><span style='color: #27ae60; font-weight: bold;'>🎉 ได้รับโปรโมชั่นส่งฟรี!</span>";
+        }
+
+        let grandTotal = productPrice + shippingCost;
+        let selectElement = document.getElementById("shippingMethod");
+        let shippingName = selectElement.options[selectElement.selectedIndex].text.split(" ")[0];
+
+        document.getElementById("result").innerHTML = `
+            <h4>สรุปรายการยอดชำระ</h4>
+            <p>ราคาสินค้า: ${productPrice.toFixed(2)} บาท</p>
+            <p>รูปแบบการจัดส่ง: <b>${shippingName}</b></p>
+            <p>ค่าจัดส่ง: ${shippingCost === 0 ? "<s>" + originalShippingCost + "</s> ฟรี" : shippingCost.toFixed(2) + " บาท"} ${note}</p>
+            <p style="font-size: 1.2em; color: #e74c3c;"><strong>รวมสุทธิ: ${grandTotal.toFixed(2)} บาท</strong></p>
+        `;
+    }
+    </script>
+
+</body>
+</html>
